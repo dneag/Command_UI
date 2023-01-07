@@ -37,47 +37,6 @@ class CP_Single:
 
         self.widget.loadVal(file, self.shortName)
 
-class CP_Orders(CP_Single):
-
-    def __init__(self, shortName, widget):
-        
-        CP_Single.__init__(self, shortName, widget)
-
-        self.ordersLayout = None
-        self.orderFrameLayouts = []
-        self.totalOrders = 4 # does not include leaf shoots
-
-    def createUI(self, *_):
-
-        self.widget.uiID = cmds.intField(   v=self.widget.min,min=self.widget.min,max=self.widget.max,
-                                            s=self.widget.step,cc=self.updateLayouts)
-    
-    def getParamVal(self, *_):
-
-        return super().getParamVal() + 1 # plus one for leaf shoots...
-
-    def loadSettings(self, file):
-
-        super().loadSettings(file)
-        self.updateLayouts()
-        
-    def createOrdersLayout(self, *_):
-
-        self.ordersLayout = cmds.frameLayout(l="Order Controls",cll=1,cl=0,w=420,ec=self.updateLayouts)
-
-    def createNextOrderLayout(self, orderNum):
-
-        self.orderFrameLayouts.append(cmds.frameLayout(l="Order " + str(orderNum+1),cll=1,cl=1,vis=1))
-
-    def updateLayouts(self, *_):
-
-        newOrderCount = self.widget.getVal()
-
-        for i in range(self.totalOrders):
-
-            visibility = 1 if i < newOrderCount else 0
-            cmds.frameLayout(self.orderFrameLayouts[i], e=True, vis=visibility)
-
 # The widget argument must be of one of the above types
 # The number of initValues should correspond to the number of widgets to be created
 class CP_Multi:
@@ -143,22 +102,3 @@ class CP_MultiGradi(CP_Multi):
                 xValue += increment
         
         return valuesAsStrings if (len(valuesAsStrings) > 1) else valuesAsStrings[0]
-
-# Class specifically for the "igs" parameter.  Assumes baseWidget is an EquiGrp with 4 widgetsPerGroup and
-# that there will be a total of 5 groups
-class CP_IGS(CP_Multi):
-
-    def __init__(self, shortName, baseWidget):
-        
-        CP_Multi.__init__(self, shortName, baseWidget)
-
-        self.visibilities = [[0, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [1, 1, 1, 1]]
-
-    def createUI(self, *_):
-        
-        groupIndex = len(self.widgets)
-        super().createUI()
-
-        for i in range(len(self.widgets[groupIndex].widgets)):
-
-            cmds.floatField(self.widgets[groupIndex].widgets[i].uiID, e=True, vis=self.visibilities[groupIndex][i])

@@ -157,14 +157,18 @@ class Gradient(Widget):
 
         print(pointValues)
 
-# Grp classes behave like single widgets, but are actually groups of widgets
-# They can be used for the widget parameter for PG_Single and PG_Multi
-# Their getVal() returns a single string containing each widget value separated by commas
+# Group classes behave like single widgets, but are actually groups of widgets.
+# They can be used for the widget parameter for PG_Single and PG_Multi.
+# By default their getVal() returns a list of all the widgets' values.  If the paramType is specified
+#   as 'string', it will return a single string containing each widget value separated by commas
+# Note that createUI() calls on CP objects with Grps will create multiple widgets at once, so
+#   the calling code must provide the appropriate layout to account for this.
 class EmptyGrp:
 
-    def __init__(self):
+    def __init__(self, paramType="list"):
 
         self.widgets = []
+        self.paramType = paramType
 
     def nextWidget(self, nextWidget):
 
@@ -173,11 +177,21 @@ class EmptyGrp:
 
     def getVal(self, *_):
 
-        value = ""
-        for widget in self.widgets:
-            value += str(widget.getVal()) + ','
+        if self.paramType == "list":
 
-        return value
+            value = []
+            for widget in self.widgets:
+                value.append(widget.getVal())
+
+            return value
+        
+        elif self.paramType == "string":
+
+            value = "" 
+            for widget in self.widgets:
+                value += str(widget.getVal()) + ','
+
+            return value
 
     def writeVal(self, file, settingName):
 
@@ -191,9 +205,9 @@ class EmptyGrp:
 
 class EquiGrp(EmptyGrp):
 
-    def __init__(self, baseWidget, widgetsPerGrp):
+    def __init__(self, baseWidget, widgetsPerGrp, paramType="list"):
 
-        EmptyGrp.__init__(self)
+        EmptyGrp.__init__(self, paramType)
         self.baseWidget = baseWidget
         self.widgetsPerGrp = widgetsPerGrp
 
@@ -205,9 +219,9 @@ class EquiGrp(EmptyGrp):
 # Contains method for creating a checkbox widget.  Assumes this is always the first widget in the group
 class CheckBoxGrp(EmptyGrp):
 
-    def __init__(self, cbLabel):
+    def __init__(self, cbLabel, paramType="list"):
 
-        EmptyGrp.__init__(self)
+        EmptyGrp.__init__(self, paramType)
         self.cbLabel = cbLabel
 
     def nextCheckBox(self, *_):

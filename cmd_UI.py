@@ -22,6 +22,9 @@ class Cmd_UI:
 
             self.paramUIs[p.shortName] = p
 
+        # For various reasons, some commands require a name, specifying some object, as the first argument
+        self.auxilaryName = None
+
         self.createCommandCallerFile()
 
     # Creates a file named according to the command and with the suffix, "_call.py".
@@ -35,12 +38,13 @@ class Cmd_UI:
         commandCallFile.write("def call(c):\n")
         commandCallFile.write("\tif c.commandName != \"" + self.commandName + "\":\n")
         commandCallFile.write("\t\tprint(\"Error: command passed to call() does not match command in call file\")\n")
-        commandCallFile.write("\tvalues=[]\n")
+        commandCallFile.write("\tvalues=[c.auxilaryName]\n")
         commandCallFile.write("\tfor p in c.paramUIs:\n")
         commandCallFile.write("\t\tvalues.append(c.paramUIs[p].getParamVal())\n")
         commandCallFile.write("\tprint(\"Calling " + self.commandName + "()\")\n")
         commandCallFile.write("\tcmds." + self.commandName + "(\n")
-        valueIndex = 0
+        commandCallFile.write("\t\tvalues[0],\n") 
+        valueIndex = 1
         for key in self.paramUIs:
 
             commandCallFile.write("\t\t" + self.paramUIs[key].shortName + "=values[" + str(valueIndex) + "],\n")

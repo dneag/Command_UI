@@ -10,9 +10,10 @@ import time
 
 class Cmd_UI:
 
-    def __init__(self, commandName, settingsPath, paramList):
+    def __init__(self, commandName, scriptsPath, settingsPath, paramList):
 
         self.commandName = commandName
+        self.scriptsPath = scriptsPath
         self.settingsPath = settingsPath if settingsPath.endswith("/") else settingsPath + "/"
         self.presetsMenu = None
         self.currentPreset = None
@@ -33,7 +34,7 @@ class Cmd_UI:
     # Import this file into any code needing to call the command.
     def createCommandCallerFile(self, *_):
 
-        commandCallFile = open("C:/Users/13308/Documents/maya/scripts/" + self.commandName + "_call.py","w")
+        commandCallFile = open(self.scriptsPath + self.commandName + "_call.py","w")
         commandCallFile.write("import maya.cmds as cmds\n")
         commandCallFile.write("def call(c):\n")
         commandCallFile.write("\tif c.commandName != \"" + self.commandName + "\":\n")
@@ -41,7 +42,8 @@ class Cmd_UI:
         commandCallFile.write("\tvalues=[c.auxilaryName]\n")
         commandCallFile.write("\tfor p in c.paramUIs:\n")
         commandCallFile.write("\t\tvalues.append(c.paramUIs[p].getParamVal())\n")
-        commandCallFile.write("\tprint(\"Calling " + self.commandName + "()\")\n")
+        commandCallFile.write("\tprint(\"Calling " + self.commandName + "() with values...\")\n")
+        commandCallFile.write("\tprint(values)\n")
         commandCallFile.write("\tcmds." + self.commandName + "(\n")
         commandCallFile.write("\t\tvalues[0],\n") 
         valueIndex = 1
@@ -74,9 +76,9 @@ class Cmd_UI:
         print("finished loading " + presetFileName + " preset")
         settingsFO.close()
 
-        self.currentPreset = presetFileName
+        self.currentPreset = presetFileName[:-4]
         
-        if doSomething != None:
+        if doSomething != None and not isinstance(doSomething, bool):
             doSomething()
 
     def saveSettings(self, presetFileName):
@@ -122,7 +124,7 @@ class Cmd_UI:
             cmds.deleteUI(windowName)
 
         windowTitle = "Overwrite " + presetFileName + " Settings File"
-        print("Making overWrite window with name: ", windowName)
+
         cmds.window(windowName, title=windowTitle, rtf=True, s=False)
         cmds.columnLayout(co=["both", 10], rs=10)
         cmds.columnLayout()

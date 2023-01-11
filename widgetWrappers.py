@@ -237,7 +237,7 @@ class EquiGrp(EmptyGrp):
 
     def create(self, initValues):
 
-        if isinstance(initValues, list) and len(initValues) == len(self.widgetsPerGrp):
+        if isinstance(initValues, list) and len(initValues) == self.widgetsPerGrp:
             
             for i in range(self.widgetsPerGrp):
                 self.widgets.append(self.nextWidget(copy.deepcopy(self.baseWidget), initValues[i]))

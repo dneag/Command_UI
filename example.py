@@ -13,6 +13,8 @@ importlib.reload(cmd_UI)
 
 # Create the Cmd_UI object, specifying the name of the Maya command, directory for the command call file,
 # directory for saving/loading, and any parameters
+# Here we are using the 'curve' command: https://download.autodesk.com/us/maya/2010help/CommandsPython/curve.html
+#   with only the 'p' (point) and 'd' (degree) parameters set
 curveCommand = cmd_UI.Cmd_UI(
     "curve",
     "C:/Users/13308/Documents/maya/scripts/",

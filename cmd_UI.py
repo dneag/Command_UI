@@ -10,6 +10,10 @@ import time
 
 class Cmd_UI:
 
+    # commandName: (string) the name of the Maya command
+    # scriptsPath: (string) the full path to your Maya scripts folder
+    # settingsPath: (string) the full path to your settings folder for this command
+    # paramList: (list) a list of CP (from commandParameter.py) objects for this command
     def __init__(self, commandName, scriptsPath, settingsPath, paramList):
 
         self.commandName = commandName

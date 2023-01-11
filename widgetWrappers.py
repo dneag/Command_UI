@@ -17,6 +17,26 @@ class Widget:
         if line[1] != settingName: print("WARNING:  WRONG VALUE READ - " + line[1])
         self.setVal(line[0])
 
+    def initValIsGood(self, initVal, type):
+
+        if type == "int":
+            if isinstance(initVal, int):
+                pass
+            else:
+                return False
+        elif type == "float":
+            if isinstance(initVal, float):
+                pass
+            else:
+                return False
+        else:
+            return False
+
+        if initVal <= self.min: return False
+        elif initVal >= self.max: return False
+        
+        return True
+
 class IntFld(Widget):
 
     def __init__(self, min, max, step):
@@ -25,9 +45,11 @@ class IntFld(Widget):
         self.max = max
         self.step = step
 
-    def create(self, *_):
+    def create(self, initVal):
 
-        self.uiID = cmds.intField(v=self.min,min=self.min,max=self.max,s=self.step)
+        if not self.initValIsGood(initVal, "int"): initVal = self.min
+
+        self.uiID = cmds.intField(v=initVal,min=self.min,max=self.max,s=self.step)
 
     def getVal(self, *_):
        
@@ -50,9 +72,11 @@ class FloatFld(Widget):
         self.step = step
         self.precision = precision
 
-    def create(self, *_):
+    def create(self, initVal):
 
-        self.uiID = cmds.floatField(v=self.min,min=self.min,max=self.max,s=self.step,pre=self.precision)
+        if not self.initValIsGood(initVal, "float"): initVal = self.min
+
+        self.uiID = cmds.floatField(v=initVal,min=self.min,max=self.max,s=self.step,pre=self.precision)
 
     def getVal(self, *_):
        
@@ -170,10 +194,10 @@ class EmptyGrp:
         self.widgets = []
         self.paramType = paramType
 
-    def nextWidget(self, nextWidget):
+    def nextWidget(self, newWidget, initVal=None):
 
-        nextWidget.create()
-        return nextWidget
+        newWidget.create(initVal)
+        return newWidget
 
     def getVal(self, *_):
 
@@ -211,10 +235,17 @@ class EquiGrp(EmptyGrp):
         self.baseWidget = baseWidget
         self.widgetsPerGrp = widgetsPerGrp
 
-    def create(self, *_):
+    def create(self, initValues):
 
-        for i in range(self.widgetsPerGrp):
-            self.widgets.append(self.nextWidget(copy.deepcopy(self.baseWidget)))
+        if isinstance(initValues, list) and len(initValues) == len(self.widgetsPerGrp):
+            
+            for i in range(self.widgetsPerGrp):
+                self.widgets.append(self.nextWidget(copy.deepcopy(self.baseWidget), initValues[i]))
+
+        else:
+
+            for i in range(self.widgetsPerGrp):
+                self.widgets.append(self.nextWidget(copy.deepcopy(self.baseWidget)))
 
 # Contains method for creating a checkbox widget.  Assumes this is always the first widget in the group
 class CheckBoxGrp(EmptyGrp):

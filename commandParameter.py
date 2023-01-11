@@ -17,9 +17,9 @@ class CP_Single:
         self.shortName = shortName
         self.widget = widget
 
-    def createUI(self, *_):
+    def createUI(self, val=None):
 
-        self.widget.create()
+        self.widget.create(val)
 
     def getParamVal(self, *_):
 
@@ -47,10 +47,10 @@ class CP_Multi:
         self.baseWidget = baseWidget
         self.widgets = []
 
-    def createUI(self, *_):
+    def createUI(self, val=None):
 
         self.widgets.append(copy.deepcopy(self.baseWidget))
-        self.widgets[-1].create()
+        self.widgets[-1].create(val)
 
     def getParamVal(self, *_):
 

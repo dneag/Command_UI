@@ -3,6 +3,9 @@
 
 # This file should be stored in your Maya scripts path.  The module
 #   files should be in a subdirectory.  Here, the subdirectory is Command_UI
+# Run it by executing the following code from Maya's script editor:
+#   import example
+#   example.GUI()
 
 import maya.cmds as cmds
 import importlib

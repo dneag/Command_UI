@@ -3,28 +3,22 @@
 
 # This file should be stored in your Maya scripts path.  The module
 #   files should be in a subdirectory.  Here, the subdirectory is Command_UI
-# Run it by executing the following code from Maya's script editor:
-#   import example
-#   example.GUI()
 
 import maya.cmds as cmds
 import importlib
-from Command_UI import ( widgetWrappers as widg, commandParameter as cp, cmd_UI)
-importlib.reload(widg)
-importlib.reload(cp)
-importlib.reload(cmd_UI)
+from Command_UI import cmdUI
 
 # Create the Cmd_UI object, specifying the name of the Maya command, directory for the command call file,
 # directory for saving/loading, and any parameters
 # Here we are using the 'curve' command: https://download.autodesk.com/us/maya/2010help/CommandsPython/curve.html
 #   with only the 'p' (point) and 'd' (degree) parameters set
-curveCommand = cmd_UI.Cmd_UI(
+curveCommand = cmdUI.CmdUI(
     "curve",
     "C:/Users/13308/Documents/maya/scripts/",
     "C:/Users/13308/Documents/maya/scripts/CurveCommandPresets",
     [
-        cp.CP_Single("d",widg.FloatFld(3.,100000.,.01,2)),
-        cp.CP_Multi("p",widg.EquiGrp(widg.FloatFld(-10000., 10000.,.01,2),3)),
+        cmdUI.flag.FlagSingle("d",cmdUI.widg.FloatFld(3.,100000.,.01,2)),
+        cmdUI.flag.FlagMulti("p",cmdUI.widg.EquiGrp(cmdUI.widg.FloatFld(-10000., 10000.,.01,2),3)),
     ]
 )
 
@@ -53,8 +47,8 @@ class GUI:
         cmds.button(label="Save",w=50,command=self.callSave)
         cmds.button(label="Load",w=50)
 
-        # Creates a popup menu that will display the list of settings files in the directory specified for the command
-        # This will be displayed when the Load button is left clicked
+        # Creates a popup menu that will display the list of settings files in the directory specified for the command.
+        # This will be displayed when the Load button is left clicked.
         # The function passed will be triggered whenever a new menu item is selected. i.e. whenever a new preset is 
         #   loaded.  The function is not required. 
         curveCommand.makePresetsPopupMenu(self.setCurrentPreset)
@@ -65,16 +59,16 @@ class GUI:
 
         cmds.rowColumnLayout(nc=2,cw=[(1,70),(2,35)])
         cmds.text("degree: ")
-        curveCommand.paramUIs["d"].createUI()
+        curveCommand.flagUIs["d"].createUI()
         cmds.setParent("..")
 
         cmds.text("points")
 
         cmds.rowColumnLayout(nc=3, cw=[(1,40),(2,40),(3,40)])
-        curveCommand.paramUIs["p"].createUI([0.,0.,0.])
-        curveCommand.paramUIs["p"].createUI([0.,0.,0.])
-        curveCommand.paramUIs["p"].createUI([0.,0.,0.])
-        curveCommand.paramUIs["p"].createUI([0.,0.,0.])
+        curveCommand.flagUIs["p"].createUI([0.,0.,0.])
+        curveCommand.flagUIs["p"].createUI([0.,0.,0.])
+        curveCommand.flagUIs["p"].createUI([0.,0.,0.])
+        curveCommand.flagUIs["p"].createUI([0.,0.,0.])
         cmds.setParent("..")
 
         cmds.button(l="Make Curve",w=100,command=self.callCurveCommand)

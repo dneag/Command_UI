@@ -3,18 +3,20 @@ from functools import partial
 import os
 import time
 
-# An object of this type holds the name of a Maya command and a dictionary with all CP objects
+import cmdFlag as flag, cmdWidget as widg
+
+# An object of this type holds the name of a Maya command and a dictionary with all Flag objects
 #   corresponding to that command
 
 # The constructor will create a file to call the actual Maya command
 
-class Cmd_UI:
+class CmdUI:
 
     # commandName: (string) the name of the Maya command
     # scriptsPath: (string) the full path to your Maya scripts folder
     # settingsPath: (string) the full path to your settings folder for this command
-    # paramList: (list) a list of CP (from commandParameter.py) objects for this command
-    def __init__(self, commandName, scriptsPath, settingsPath, paramList):
+    # paramList: (list) a list of Flag (from cmdFlag.py) objects for this command
+    def __init__(self, commandName, scriptsPath, settingsPath, flagList):
 
         self.commandName = commandName
         self.scriptsPath = scriptsPath
@@ -22,10 +24,10 @@ class Cmd_UI:
         self.presetsMenu = None
         self.currentPreset = None
 
-        self.paramUIs = {}
-        for p in paramList:
+        self.flagUIs = {}
+        for p in flagList:
 
-            self.paramUIs[p.shortName] = p
+            self.flagUIs[p.shortName] = p
 
         # For various reasons, some commands require a name, specifying some object, as the first argument
         self.auxilaryName = None
@@ -33,7 +35,7 @@ class Cmd_UI:
         self.createCommandCallerFile()
 
     # Creates a file named according to the command and with the suffix, "_call.py".
-    # This file defines a single function, call(), to which a Cmd_UI object can be passed to invoke the 
+    # This file defines a single function, call(), to which a CmdUI object can be passed to invoke the 
     #   actual Maya command.
     # Import this file into any code needing to call the command.
     def createCommandCallerFile(self, *_):
@@ -44,16 +46,16 @@ class Cmd_UI:
         commandCallFile.write("\tif c.commandName != \"" + self.commandName + "\":\n")
         commandCallFile.write("\t\tprint(\"Error: command passed to call() does not match command in call file\")\n")
         commandCallFile.write("\tvalues=[c.auxilaryName]\n")
-        commandCallFile.write("\tfor p in c.paramUIs:\n")
-        commandCallFile.write("\t\tvalues.append(c.paramUIs[p].getParamVal())\n")
+        commandCallFile.write("\tfor p in c.flagUIs:\n")
+        commandCallFile.write("\t\tvalues.append(c.flagUIs[p].getParamVal())\n")
         commandCallFile.write("\tprint(\"Calling " + self.commandName + "() with values...\")\n")
         commandCallFile.write("\tprint(values)\n")
         commandCallFile.write("\tcmds." + self.commandName + "(\n")
         commandCallFile.write("\t\tvalues[0],\n") 
         valueIndex = 1
-        for key in self.paramUIs:
+        for key in self.flagUIs:
 
-            commandCallFile.write("\t\t" + self.paramUIs[key].shortName + "=values[" + str(valueIndex) + "],\n")
+            commandCallFile.write("\t\t" + self.flagUIs[key].shortName + "=values[" + str(valueIndex) + "],\n")
             valueIndex += 1
 
         commandCallFile.write(")\n")
@@ -73,9 +75,9 @@ class Cmd_UI:
 
         settingsFO = open(self.settingsPath + presetFileName,"r")
 
-        for key in self.paramUIs:
+        for key in self.flagUIs:
 
-            self.paramUIs[key].loadSettings(settingsFO)
+            self.flagUIs[key].loadSettings(settingsFO)
 
         print("finished loading " + presetFileName + " preset")
         settingsFO.close()
@@ -106,8 +108,8 @@ class Cmd_UI:
 
             settingsFO = open(self.settingsPath + presetFileName,"w")
 
-            for key in self.paramUIs:
-                self.paramUIs[key].writeSettings(settingsFO)
+            for key in self.flagUIs:
+                self.flagUIs[key].writeSettings(settingsFO)
 
             cmds.menuItem(presetFileName, l=presetFileName, p=self.presetsMenu,
                 command = partial(self.loadSettings, presetFileName))

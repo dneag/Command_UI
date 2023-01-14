@@ -10,7 +10,7 @@ import copy
 # The lowest, those defined in widgetWrappers.py, are passed to their constructors, while
 #   these are passed to MayaCommandUI objects' constructors
 
-class CP_Single:
+class FlagSingle:
 
     def __init__(self, shortName, widget):
         
@@ -39,7 +39,7 @@ class CP_Single:
 
 # The widget argument must be of one of the above types
 # The number of initValues should correspond to the number of widgets to be created
-class CP_Multi:
+class FlagMulti:
 
     def __init__(self, shortName, baseWidget):
         
@@ -79,11 +79,11 @@ class CP_Multi:
 
 # Need to override getParamVal() for gradients because there is a discrepancy between a gradient's 
 #   stored settings value and its command parameter value, unlike other widgets
-class CP_MultiGradi(CP_Multi):
+class FlagMultiGradi(FlagMulti):
 
     def __init__(self, shortName, baseWidget, valuesPerGradient):
         
-        CP_Multi.__init__(self, shortName, baseWidget)
+        FlagMulti.__init__(self, shortName, baseWidget)
 
         self.valuesPerGradient = valuesPerGradient
 

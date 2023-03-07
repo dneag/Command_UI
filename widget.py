@@ -185,7 +185,7 @@ class Gradient(Widget):
 # They can be used for the widget parameter for PG_Single and PG_Multi.
 # By default their getVal() returns a list of all the widgets' values.  If the paramType is specified
 #   as 'string', it will return a single string containing each widget value separated by commas
-# Note that createUI() calls on CP objects with Grps will create multiple widgets at once, so
+# Note that createUI() calls on flag objects with Grps will create multiple widgets at once, so
 #   the calling code must provide the appropriate layout to account for this.
 class EmptyGrp:
 

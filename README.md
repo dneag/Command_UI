@@ -4,8 +4,8 @@ A set of wrapper classes designed to assist with the development of python GUI p
 In particular, these are designed for creating GUI's which involve many Maya command calls and/or commands with 
 long lists of flags where it is useful to save and load values of GUI components associated with those flags.
 
-This consists of three tiers of classes.  The lowest are defined in cmdWidget.py and are used to construct those
-in cmdFlag.py, which, in turn, construct CmdUI objects.
+This consists of three tiers of classes.  The lowest are defined in widget.py and are used to construct those
+in flag.py, which, in turn, construct CmdUI objects.
 
 Understanding requires some familiarity with Maya and the maya.cmds Python library
 

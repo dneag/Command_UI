@@ -3,8 +3,6 @@ from functools import partial
 import os
 import time
 
-import cmdFlag as flag, cmdWidget as widg
-
 # An object of this type holds the name of a Maya command and a dictionary with all Flag objects
 #   corresponding to that command
 
@@ -15,7 +13,7 @@ class CmdUI:
     # commandName: (string) the name of the Maya command
     # scriptsPath: (string) the full path to your Maya scripts folder
     # settingsPath: (string) the full path to your settings folder for this command
-    # paramList: (list) a list of Flag (from cmdFlag.py) objects for this command
+    # paramList: (list) a list of Flag (from flag.py) objects for this command
     def __init__(self, commandName, scriptsPath, settingsPath, flagList):
 
         self.commandName = commandName

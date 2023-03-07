@@ -6,19 +6,19 @@
 
 import maya.cmds as cmds
 import importlib
-from Command_UI import cmdUI
+from Command_UI import ( flag as cf, cmdui, widget as widg)
 
 # Create the CmdUI object, specifying the name of the Maya command, Maya's scripts directory (should be
 #   the same as the directory for this file), directory for saving/loading, and list of Flags
 # Here we are using the 'curve' command: https://download.autodesk.com/us/maya/2010help/CommandsPython/curve.html
 #   with only the 'p' (point) and 'd' (degree) parameters set
-curveCommand = cmdUI.CmdUI(
+curveCommand = cmdui.CmdUI(
     "curve",
     "C:/Users/<username>/Documents/maya/scripts/",
     "C:/Users/<username>/Documents/maya/scripts/CurveCommandPresets",
     [
-        cmdUI.flag.FlagSingle("d",cmdUI.widg.FloatFld(3.,100000.,.01,2)),
-        cmdUI.flag.FlagMulti("p",cmdUI.widg.EquiGrp(cmdUI.widg.FloatFld(-10000., 10000.,.01,2),3)),
+        cf.FlagSingle("d",widg.FloatFld(3.,100000.,.01,2)),
+        cf.FlagMulti("p",widg.EquiGrp(widg.FloatFld(-10000., 10000.,.01,2),3)),
     ]
 )
 

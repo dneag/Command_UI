@@ -182,7 +182,7 @@ class Gradient(Widget):
         print(pointValues)
 
 # Group classes behave like single widgets, but are actually groups of widgets.
-# They can be used for the widget parameter for PG_Single and PG_Multi.
+# They can be used for the widget parameter for FlagSingle and FlagMulti.
 # By default their getVal() returns a list of all the widgets' values.  If the paramType is specified
 #   as 'string', it will return a single string containing each widget value separated by commas
 # Note that createUI() calls on flag objects with Grps will create multiple widgets at once, so

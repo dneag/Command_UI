@@ -23,9 +23,9 @@ class CmdUI:
         self.currentPreset = None
 
         self.flagUIs = {}
-        for p in flagList:
+        for f in flagList:
 
-            self.flagUIs[p.shortName] = p
+            self.flagUIs[f.shortName] = f
 
         # For various reasons, some commands require a name, specifying some object, as the first argument
         self.auxilaryName = None

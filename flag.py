@@ -10,11 +10,25 @@ import copy
 # The lowest, those defined in widgetWrappers.py, are passed to their constructors, while
 #   these are passed to MayaCommandUI objects' constructors
 
-class FlagSingle:
+class Flag:
+
+    def __init__(self, shortName):
+
+        self.shortName = shortName
+    
+    def writeSettings(self, file):
+
+        pass
+
+    def loadSettings(self, file):
+
+        pass
+
+class FlagSingle(Flag):
 
     def __init__(self, shortName, widget):
         
-        self.shortName = shortName
+        Flag.__init__(self, shortName)
         self.widget = widget
 
     def createUI(self, val=None):
@@ -39,11 +53,11 @@ class FlagSingle:
 
 # The widget argument must be of one of the above types
 # The number of initValues should correspond to the number of widgets to be created
-class FlagMulti:
+class FlagMulti(Flag):
 
     def __init__(self, shortName, baseWidget):
         
-        self.shortName = shortName
+        Flag.__init__(self, shortName)
         self.baseWidget = baseWidget
         self.widgets = []
 
@@ -102,3 +116,20 @@ class FlagMultiGradi(FlagMulti):
                 xValue += increment
         
         return valuesAsStrings if (len(valuesAsStrings) > 1) else valuesAsStrings[0]
+    
+# Allow adding a flag with no widget or values to save / load
+class FlagMulti_NoWidget(Flag):
+
+    def __init__(self, shortName):
+        
+        Flag.__init__(self, shortName)
+        self.paramVal = None
+
+    def setParamVal(self, val):
+
+        self.paramVal = val
+        
+    def getParamVal(self, *_):
+
+        return self.paramVal
+    

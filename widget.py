@@ -90,6 +90,28 @@ class FloatFld(Widget):
 
         cmds.floatField(self.uiID, e=True, en=enabled)
 
+class TextFld(Widget):
+
+    def __init__(self, *_):
+        
+        pass
+
+    def create(self, *_):
+
+        self.uiID = cmds.textField()
+
+    def getVal(self, *_):
+       
+        return cmds.textField(self.uiID, q=True, v=True)
+
+    def setVal(self, newText):
+
+        cmds.textField(self.uiID, e=True, v=newText)
+
+    def enable(self, enabled):
+
+        cmds.floatField(self.uiID, e=True, en=enabled)
+
 class CheckBox(Widget):
 
     def __init__(self, label):
@@ -127,7 +149,7 @@ class IntSliderFld(Widget):
         self.uiID = cmds.intSliderGrp(v=self.min,min=self.min,max=self.max,f=True,l=self.label,cw3=self.columnWidths)
 
     def getVal(self, *_):
-
+        
         return cmds.intSliderGrp(self.uiID, q=True, v=True)
 
     def setVal(self, newVal):

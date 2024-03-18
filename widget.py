@@ -65,18 +65,22 @@ class IntFld(Widget):
 
 class FloatFld(Widget):
 
-    def __init__(self, min, max, step, precision):
+    def __init__(self, min, max, step, precision, changeCommand = None):
         
         self.min = min
         self.max = max
         self.step = step
         self.precision = precision
+        self.changeCommand = changeCommand
 
     def create(self, initVal):
 
         if not self.initValIsGood(initVal, "float"): initVal = self.min
 
-        self.uiID = cmds.floatField(v=initVal,min=self.min,max=self.max,s=self.step,pre=self.precision)
+        if (self.changeCommand):
+            self.uiID = cmds.floatField(v=initVal,min=self.min,max=self.max,s=self.step,pre=self.precision,cc=self.changeCommand)
+        else:
+            self.uiID = cmds.floatField(v=initVal,min=self.min,max=self.max,s=self.step,pre=self.precision)
 
     def getVal(self, *_):
        
@@ -247,7 +251,14 @@ class EmptyGrp:
     def loadVal(self, file, settingName):
 
         for i in range(len(self.widgets)):
+
             self.widgets[i].loadVal(file, settingName + str(i))
+
+            if type(self.widgets[i]) is FloatFld:
+
+                if (self.widgets[i].changeCommand is not None):
+
+                    self.widgets[i].changeCommand()
 
 class EquiGrp(EmptyGrp):
 

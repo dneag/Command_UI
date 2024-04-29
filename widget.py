@@ -50,6 +50,7 @@ class IntFld(Widget):
         if not self.initValIsGood(initVal, "int"): initVal = self.min
 
         self.uiID = cmds.intField(v=initVal,min=self.min,max=self.max,s=self.step)
+        return self.uiID
 
     def getVal(self, *_):
        
@@ -81,6 +82,8 @@ class FloatFld(Widget):
             self.uiID = cmds.floatField(v=initVal,min=self.min,max=self.max,s=self.step,pre=self.precision,cc=self.changeCommand)
         else:
             self.uiID = cmds.floatField(v=initVal,min=self.min,max=self.max,s=self.step,pre=self.precision)
+        
+        return self.uiID
 
     def getVal(self, *_):
        
@@ -103,6 +106,7 @@ class TextFld(Widget):
     def create(self, *_):
 
         self.uiID = cmds.textField()
+        return self.uiID
 
     def getVal(self, *_):
        
@@ -121,10 +125,27 @@ class CheckBox(Widget):
     def __init__(self, label):
         
         self.label = label
+        self.dependents = []
 
     def create(self, *_):
 
-        self.uiID = cmds.checkBox(l=self.label,v=0)
+        self.uiID = cmds.checkBox(l=self.label,v=0,cc=self.toggleDependents)
+
+        return self.uiID
+
+    def addDependent(self, widget):
+
+        enabled = cmds.checkBox(self.uiID, q=True, v=True)
+        e = False if enabled else True
+        self.dependents.append(widget)
+        widget.enable(e)
+    
+    def toggleDependents(self, enabled):
+        
+        e = False if enabled else True
+        for d in self.dependents:
+
+            d.enable(e)
 
     def getVal(self, *_):
        
@@ -151,6 +172,7 @@ class IntSliderFld(Widget):
     def create(self, *_):
 
         self.uiID = cmds.intSliderGrp(v=self.min,min=self.min,max=self.max,f=True,l=self.label,cw3=self.columnWidths)
+        return self.uiID
 
     def getVal(self, *_):
         

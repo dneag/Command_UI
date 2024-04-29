@@ -33,7 +33,7 @@ class FlagSingle(Flag):
 
     def createUI(self, val=None):
 
-        self.widget.create(val)
+        return self.widget.create(val)
 
     def getParamVal(self, *_):
 
@@ -51,8 +51,6 @@ class FlagSingle(Flag):
 
         self.widget.loadVal(file, self.shortName)
 
-# The widget argument must be of one of the above types
-# The number of initValues should correspond to the number of widgets to be created
 class FlagMulti(Flag):
 
     def __init__(self, shortName, baseWidget):
@@ -64,7 +62,8 @@ class FlagMulti(Flag):
     def createUI(self, val=None):
 
         self.widgets.append(copy.deepcopy(self.baseWidget))
-        self.widgets[-1].create(val)
+
+        return self.widgets[-1].create(val)
 
     def getParamVal(self, *_):
 
@@ -75,6 +74,10 @@ class FlagMulti(Flag):
 
         return value
 
+    def getWidget(self, index):
+
+        return self.widgets[index]
+    
     def enable(self, index, enabled):
 
         self.widgets[index].enable(enabled)
